@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <title>Prototype Example Web Service Implementation</title>
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font: 13px Helvetica, Arial; }
+  #myChart {height: 100% !important; width: 100% !important;}
+  div {width: 600px !important; height: 600px !important;}
+  </style>
+</head>
+<body>
+  <div>
+    <canvas id="chart" width="400" height="400"></canvas>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="scripts/Chart.bundle.js"></script>
+  <script>
+  var socket = io();
+  var ctx = document.getElementById("chart").getContext("2d");
+  ctx.width = 300;
+  ctx.height = 300;
+  var chartData = [];
+  var dominanceData = [];
+  var lineChart = new Chart(ctx, {
+    type: 'line',
+    options: {
+      elements: {
+        line: {
+          tension: 0, // disables bezier curves
+        }
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        xAxes: [{
+          type: 'time',
+          distribution: 'linear',
+        }],
+        yAxes: [{
+          ticks: {
+            min: 0,
+            max: 10
+          }
+        }]
+      }
+    },
+    data: {
+      datasets: [{
+        label: 'Happiness Index',
+        data: chartData,
+        borderColor: [
+          'rgba(255, 99, 132, 0.6)'
+        ]
+      },
+      {
+        label: 'Dominance Index',
+        data: dominanceData,
+        borderColor: [
+          'rgba(54, 162, 235, 0.6)'
+        ]
+      }]
+    }
+  })
+
+  socket.on('event', function(data) {
+    lineChart.data.datasets[0].data = data.sentiment;
+    lineChart.data.datasets[1].data = data.dominance;
+    lineChart.update();
+  });
+  </script>
+</body>
+</html>
