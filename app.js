@@ -9,7 +9,7 @@ var chartData = [];
 var dominanceData = [];
 
 // Constants
-const PORT = 8080;
+const PORT = 3001;
 
 app.use( bodyParser.json() );
 app.use(express.static(__dirname + "/static"))
