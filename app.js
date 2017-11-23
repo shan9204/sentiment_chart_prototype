@@ -27,7 +27,7 @@ io.on('connection', function(socket){
   io.emit('event', resultData);
 });
 
-app.post('/req', function(req, res){
+app.post('/stream', function(req, res){
   if(typeof req.body.valence === 'number' && isFinite(req.body.valence)) {
     chartData.push(req.body.valence);
   }
